@@ -92,14 +92,20 @@ public class Goal : MonoBehaviour
     IEnumerator LoadNextSceneCoroutine()
     {
         yield return new WaitForSeconds(completionDelay);
-        
-        if (!string.IsNullOrEmpty(nextSceneName))
+
+        HapticManager.LevelComplete();
+
+        // Prefer mixtape scene transition if available
+        if (SceneTransitionManager.instance != null)
+        {
+            SceneTransitionManager.instance.TransitionToScene("MixtapeMap");
+        }
+        else if (!string.IsNullOrEmpty(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
         }
         else
         {
-            // If no next scene specified, reload current scene
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

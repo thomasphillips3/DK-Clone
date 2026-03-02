@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [Header("Timer")]
     [SerializeField] private float levelTimeLimit = 180f; // 3 minutes
     [SerializeField] private bool useTimer = true;
+    [SerializeField] private bool useMusicTimer = false; // when true, timer is driven by song progress
     
     [Header("Scene Management")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
@@ -73,9 +74,9 @@ public class GameManager : MonoBehaviour
     
     void UpdateTimer()
     {
-        if (!useTimer)
+        if (!useTimer || useMusicTimer)
             return;
-        
+
         currentTime -= Time.deltaTime;
         OnTimeChanged?.Invoke(currentTime);
         
@@ -130,10 +131,16 @@ public class GameManager : MonoBehaviour
     {
         if (levelComplete)
             return;
-        
+
         levelComplete = true;
         gameActive = false;
         OnLevelCompleted?.Invoke();
+
+        // Save track progress to mixtape system
+        MixtapeManager.instance?.SaveTrackProgress(
+            AudioSyncManager.instance?.GetCurrentSongTime() ?? 0f,
+            currentScore,
+            true);
     }
     
     public void RestartLevel()

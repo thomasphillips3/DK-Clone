@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Player
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Collectible
   - Enemy
   - OneWay
-  - 
+  - Ground
   - 
   - 
   - 

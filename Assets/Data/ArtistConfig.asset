@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b198e042e4d4c7ea3241ebe51024ca, type: 3}
+  m_Name: ArtistConfig
+  m_EditorClassIdentifier: Assembly-CSharp::ArtistConfig
+  artistName: thomas phillips
+  albumTitle: time off 3
+  cassetteLabel: bombest
+  brandColor: {r: 1, g: 0.5193217, b: 0, a: 1}
+  tracks:
+  - {fileID: 11400000, guid: 9b9ca1a10c35841a89d9c98a9d3d5148, type: 2}
+  - {fileID: 11400000, guid: 186714ed31e164aa3a3ac89dce452d06, type: 2}
+  - {fileID: 11400000, guid: 5172210722d2d4641b5a4690d3fde49b, type: 2}
+  - {fileID: 11400000, guid: 4ce0623f968634d10bac0375d815a764, type: 2}
+  - {fileID: 11400000, guid: 69c9a609fc445477495e3d190d6f7bcf, type: 2}
+  - {fileID: 11400000, guid: 20433eb09790b464bb419db6277e9daf, type: 2}
+  - {fileID: 11400000, guid: 58e3544dcf61647f4a23982568355fb2, type: 2}
+  - {fileID: 11400000, guid: 771adc2b025784d94b34097fddb373dc, type: 2}

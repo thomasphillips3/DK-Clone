@@ -36,6 +36,10 @@ public class RollerSpawner : MonoBehaviour
     
     void Start()
     {
+        // If beat-driven spawning is active, let BeatSpawnController drive spawns
+        if (GetComponent<BeatSpawnController>() != null)
+            return;
+
         if (spawnOnStart)
         {
             StartSpawning();
@@ -129,6 +133,14 @@ public class RollerSpawner : MonoBehaviour
         activeRollerCount--;
     }
     
+    public void SpawnOneNow()
+    {
+        if (rollerPrefab != null && activeRollerCount < maxActiveRollers)
+        {
+            SpawnRoller();
+        }
+    }
+
     public void SetSpawnInterval(float interval)
     {
         spawnInterval = Mathf.Max(0.5f, interval);

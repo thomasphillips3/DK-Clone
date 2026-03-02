@@ -65,7 +65,13 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead)
             return;
-        
+
+        // Save progress at point of death
+        MixtapeManager.instance?.SaveTrackProgress(
+            AudioSyncManager.instance?.GetCurrentSongTime() ?? 0f,
+            GameManager.Instance?.GetScore() ?? 0,
+            false);
+
         isDead = true;
         OnDeath?.Invoke();
         

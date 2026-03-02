@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "DK Clone.slnx"
+    "dotnet.defaultSolution": "time off 3.slnx"
 }

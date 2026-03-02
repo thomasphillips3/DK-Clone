@@ -24,6 +24,13 @@ public class HUDController : MonoBehaviour
     
     void Start()
     {
+        // Yield to LevelHUDController when the mixtape UI is present
+        if (FindFirstObjectByType<LevelHUDController>() != null)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         // Find player
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)

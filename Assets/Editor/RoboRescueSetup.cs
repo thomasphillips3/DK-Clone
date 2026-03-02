@@ -1017,6 +1017,79 @@ public static class RoboRescueSetup
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // MOBILE CONTROLS
+    // ─────────────────────────────────────────────────────────────────────
+
+    [MenuItem("Robo Rescue/Add Mobile Controls")]
+    static void AddMobileControlsMenu()
+    {
+        AddMobileControls();
+        var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        EditorSceneManager.MarkSceneDirty(scene);
+        EditorSceneManager.SaveScene(scene);
+        Debug.Log("[RoboRescue] Mobile controls added and scene saved.");
+    }
+
+    static void AddMobileControls()
+    {
+        var canvas = Object.FindFirstObjectByType<Canvas>();
+        if (canvas == null) { Debug.LogError("[RoboRescue] No Canvas in scene!"); return; }
+
+        // Remove existing to allow re-run
+        var existing = canvas.transform.Find("MobileControls");
+        if (existing != null) Object.DestroyImmediate(existing.gameObject);
+
+        // Full-screen transparent container
+        var panel = new GameObject("MobileControls");
+        panel.transform.SetParent(canvas.transform, false);
+        var panelRect = panel.AddComponent<RectTransform>();
+        panelRect.anchorMin = Vector2.zero;
+        panelRect.anchorMax = Vector2.one;
+        panelRect.offsetMin = Vector2.zero;
+        panelRect.offsetMax = Vector2.zero;
+        var cg = panel.AddComponent<CanvasGroup>();
+        cg.alpha = 0.75f;
+
+        // D-pad buttons — bottom-left corner (anchor = 0,0)
+        // Center of cross at ~(185, 185) from bottom-left in 1080×1920 space
+        var blue = new Color(0.2f, 0.7f, 1f, 0.85f);
+        CreateMobileButton(panel.transform, "BtnLeft",  "<Keyboard>/a",     new Vector2(0f, 0f), new Vector2( 60f, 185f), new Vector2(110f, 110f), blue);
+        CreateMobileButton(panel.transform, "BtnRight", "<Keyboard>/d",     new Vector2(0f, 0f), new Vector2(310f, 185f), new Vector2(110f, 110f), blue);
+        CreateMobileButton(panel.transform, "BtnUp",    "<Keyboard>/w",     new Vector2(0f, 0f), new Vector2(185f, 310f), new Vector2(110f, 110f), blue);
+        CreateMobileButton(panel.transform, "BtnDown",  "<Keyboard>/s",     new Vector2(0f, 0f), new Vector2(185f,  60f), new Vector2(110f, 110f), blue);
+
+        // Jump button — bottom-right corner (anchor = 1,0)
+        var orange = new Color(1f, 0.5f, 0.1f, 0.85f);
+        CreateMobileButton(panel.transform, "BtnJump", "<Keyboard>/space", new Vector2(1f, 0f), new Vector2(-185f, 185f), new Vector2(150f, 150f), orange);
+
+        EditorUtility.SetDirty(canvas.gameObject);
+        Debug.Log("[RoboRescue] Mobile controls panel built (5 buttons).");
+    }
+
+    static void CreateMobileButton(Transform parent, string name, string controlPath,
+        Vector2 anchor, Vector2 anchoredPos, Vector2 size, Color color)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+
+        var rect = go.AddComponent<RectTransform>();
+        rect.anchorMin = anchor;
+        rect.anchorMax = anchor;
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = anchoredPos;
+        rect.sizeDelta = size;
+
+        var img = go.AddComponent<Image>();
+        img.color = color;
+        img.raycastTarget = true;
+
+        var osb = go.AddComponent<UnityEngine.InputSystem.OnScreen.OnScreenButton>();
+        var so = new SerializedObject(osb);
+        so.FindProperty("m_ControlPath").stringValue = controlPath;
+        so.ApplyModifiedProperties();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // HELPERS
     // ─────────────────────────────────────────────────────────────────────
 
