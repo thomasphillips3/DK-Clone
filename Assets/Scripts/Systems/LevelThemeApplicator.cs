@@ -29,6 +29,7 @@ public class LevelThemeApplicator : MonoBehaviour
 
         ApplyColorToTag("Platform", track.primaryColor);
         ApplyColorToTag("Ladder", track.accentColor);
+        ApplyColorToTag("Obstacle", track.accentColor);
 
         // Load and start audio for this level (only when MixtapeManager exists)
         if (AudioSyncManager.instance != null && MixtapeManager.instance != null)
@@ -63,7 +64,12 @@ public class LevelThemeApplicator : MonoBehaviour
         if (farSprite != null)
             CreateParallaxLayer("ParallaxFar", farSprite, 0.05f, -200);
         if (midSprite != null)
-            CreateParallaxLayer("ParallaxMid", midSprite, 0.15f, -180);
+        {
+            var midGo = CreateParallaxLayer("ParallaxMid", midSprite, 0.15f, -180);
+            // Soften mid layer to reduce visual clutter
+            var midSr = midGo.GetComponentInChildren<SpriteRenderer>();
+            if (midSr != null) midSr.color = new Color(1f, 1f, 1f, 0.45f);
+        }
         if (nearSprite != null)
             CreateParallaxLayer("ParallaxNear", nearSprite, 0.35f, -160);
     }
@@ -132,7 +138,7 @@ public class LevelThemeApplicator : MonoBehaviour
         sr.sortingOrder = -220;
     }
 
-    void CreateParallaxLayer(string name, Sprite sprite, float speed, int order)
+    GameObject CreateParallaxLayer(string name, Sprite sprite, float speed, int order)
     {
         var go = new GameObject(name);
         go.transform.SetParent(Camera.main.transform);
@@ -144,6 +150,7 @@ public class LevelThemeApplicator : MonoBehaviour
         layer.SetSprite(sprite);
         layer.SetScrollSpeed(speed);
         layer.SetSortingOrder(order);
+        return go;
     }
 
     void ApplyGroundTiles()
@@ -151,33 +158,9 @@ public class LevelThemeApplicator : MonoBehaviour
         var ground = GameObject.Find("Ground");
         if (ground == null) return;
 
-        var floorSprite = LoadSprite("Level01/Ground_StudioFloor");
-        if (floorSprite == null) return;
-
-        float tileWidth = floorSprite.bounds.size.x;
-        if (tileWidth <= 0f) return;
-
-        float groundY = ground.transform.position.y;
-        int count = Mathf.CeilToInt(100f / tileWidth) + 1;
-        float startX = -(count - 1) * tileWidth * 0.5f;
-
-        var parent = new GameObject("GroundTiles");
-        parent.transform.position = new Vector3(0f, groundY, 0f);
-
-        // Disable Ground's SpriteRenderer immediately to avoid any visible frame
+        // Always hide Ground's SpriteRenderer (no sprite = white bar when enabled)
         var mainSr = ground.GetComponent<SpriteRenderer>();
         if (mainSr != null) mainSr.enabled = false;
-
-        for (int i = 0; i < count; i++)
-        {
-            var go = new GameObject("GroundTile");
-            go.transform.SetParent(parent.transform);
-            go.transform.localPosition = new Vector3(startX + i * tileWidth, 0f, 0f);
-            go.transform.localScale = Vector3.one;
-            var sr = go.AddComponent<SpriteRenderer>();
-            sr.sprite = floorSprite;
-            sr.sortingOrder = -50;
-        }
     }
 
     void ApplyPatchySprite()

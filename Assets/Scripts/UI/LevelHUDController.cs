@@ -33,6 +33,7 @@ public class LevelHUDController : MonoBehaviour
         {
             Texture2D tex = WaveformScrubberRenderer.Render(track);
             waveformScrubber.texture = tex;
+            waveformScrubber.color = Color.white;
         }
 
         totalDuration = AudioSyncManager.instance?.GetTotalDuration() ?? 180f;
