@@ -313,8 +313,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc90df17627d14b9481135b7aafc2edf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::LevelThemeApplicator
+  backgroundRenderer: {fileID: 0}
+  fallbackTrack: {fileID: 11400000, guid: 9b9ca1a10c35841a89d9c98a9d3d5148, type: 2}
 --- !u!4 &126287835
 Transform:
   m_ObjectHideFlags: 0
@@ -727,6 +729,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -777,7 +780,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -845,6 +848,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ab4c1139ce24e17b2e3eca7f571712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraPulse
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa7c016f103d4655b7248810ea56c68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RetroPostProcessEffect
+  colorLevels: 128
+  pixelGridStrength: 0.08
+  vignetteStrength: 0.04
 --- !u!1 &835485087
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,10 +1771,11 @@ MonoBehaviour:
   speed: {fileID: 49556803}
   spawnPoint: {fileID: 835485088}
   basicPrefabs:
-  - {fileID: 496301492258273726, guid: 04a783efc4f414b2387559d8be7f8680, type: 3}
-  - {fileID: 4722468399642589309, guid: fa30533b0b43a4a219ebdcef0e81d4c5, type: 3}
+  - {fileID: 600001001, guid: a1b2c3d4e5f6789012345678abcdef01, type: 3}
+  - {fileID: 600002001, guid: a1b2c3d4e5f6789012345678abcdef02, type: 3}
+  - {fileID: 600003001, guid: a1b2c3d4e5f6789012345678abcdef03, type: 3}
   accentPrefabs:
-  - {fileID: 8856768587334695032, guid: 8fd9701429147446097166408ea45480, type: 3}
+  - {fileID: 600001001, guid: a1b2c3d4e5f6789012345678abcdef01, type: 3}
 --- !u!4 &1826500526
 Transform:
   m_ObjectHideFlags: 0
@@ -2116,11 +2135,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3647645889518749102, guid: 3b5bb9aba1527464ebf8a449de66bae5, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3647645889518749102, guid: 3b5bb9aba1527464ebf8a449de66bae5, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3647645889518749102, guid: 3b5bb9aba1527464ebf8a449de66bae5, type: 3}
       propertyPath: m_LocalPosition.x

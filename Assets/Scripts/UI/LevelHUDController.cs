@@ -20,6 +20,7 @@ public class LevelHUDController : MonoBehaviour
 
     private float totalDuration = 180f;
     private PlayerHealth playerHealth;
+    private ScoreManager scoreManager;
 
     void Start()
     {
@@ -39,19 +40,23 @@ public class LevelHUDController : MonoBehaviour
         playerHealth = FindFirstObjectByType<PlayerHealth>();
         if (playerHealth != null) playerHealth.OnLivesChanged += UpdateLives;
 
-        if (GameManager.Instance != null)
+        scoreManager = FindFirstObjectByType<ScoreManager>();
+        if (scoreManager != null)
+            scoreManager.OnScoreChanged += UpdateScore;
+        else if (GameManager.Instance != null)
             GameManager.Instance.OnScoreChanged += UpdateScore;
 
         if (AudioSyncManager.instance != null)
             AudioSyncManager.instance.OnBeat += FlashNowPlaying;
 
-        UpdateScore(0);
-        UpdateLives(3);
+        UpdateScore(scoreManager != null ? scoreManager.score : 0);
+        if (vinylLives != null) UpdateLives(playerHealth != null ? 3 : 0);
     }
 
     void OnDestroy()
     {
         if (playerHealth != null) playerHealth.OnLivesChanged -= UpdateLives;
+        if (scoreManager != null) scoreManager.OnScoreChanged -= UpdateScore;
         if (GameManager.Instance != null) GameManager.Instance.OnScoreChanged -= UpdateScore;
         if (AudioSyncManager.instance != null) AudioSyncManager.instance.OnBeat -= FlashNowPlaying;
     }

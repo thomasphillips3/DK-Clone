@@ -65,6 +65,9 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Extracted video frames (temporary analysis)
+video_frames/
+
 # Packed Addressables
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 

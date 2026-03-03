@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -8,10 +9,13 @@ public class ScoreManager : MonoBehaviour
 
     public Text scoreText; // optional (legacy UI). For TMP, swap type.
 
+    public event Action<int> OnScoreChanged;
+
     public void Add(int amount)
     {
         score += amount;
         UpdateUI();
+        OnScoreChanged?.Invoke(score);
     }
 
     void Update()

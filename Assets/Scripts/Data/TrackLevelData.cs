@@ -18,6 +18,8 @@ public class TrackLevelData : ScriptableObject
     public Color secondaryColor = Color.magenta;
     public Color accentColor = Color.white;
     public Texture2D albumArtTexture;
+    public Texture2D levelThumbnail;
+    public Sprite levelBackground;
 
     [Header("Gameplay")]
     public float baseSpawnInterval = 3f;

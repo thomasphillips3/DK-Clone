@@ -25,8 +25,9 @@ public class MixtapeMapController : MonoBehaviour
     [SerializeField] private TMP_Text detailBpmText;
     [SerializeField] private TMP_Text detailStatsText;
 
-    [Header("Patchy")]
+    [Header("Patchy / Level Thumbnail")]
     [SerializeField] private PatchyCharacter patchyCharacter;
+    [SerializeField] private RawImage levelThumbnailImage;
 
     [Header("Atmosphere")]
     [SerializeField] private MixtapeAtmosphere atmosphere;
@@ -56,6 +57,7 @@ public class MixtapeMapController : MonoBehaviour
         }
 
         selectedIndex = 0;
+        EnsureLevelThumbnailImage();
         RefreshButtons();
         PopulateCassetteLabel();
         UpdateDetailPanel(selectedIndex);
@@ -137,6 +139,27 @@ public class MixtapeMapController : MonoBehaviour
         }
     }
 
+    void EnsureLevelThumbnailImage()
+    {
+        if (levelThumbnailImage != null || patchyCharacter == null) return;
+        var patchyRT = patchyCharacter.GetComponent<RectTransform>();
+        if (patchyRT == null) return;
+        var parent = patchyRT.parent;
+        if (parent == null) return;
+        var go = new GameObject("LevelThumbnail", typeof(RectTransform), typeof(RawImage));
+        go.transform.SetParent(parent, false);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = patchyRT.anchorMin;
+        rt.anchorMax = patchyRT.anchorMax;
+        rt.anchoredPosition = patchyRT.anchoredPosition;
+        rt.sizeDelta = patchyRT.sizeDelta;
+        rt.pivot = patchyRT.pivot;
+        rt.SetSiblingIndex(patchyRT.GetSiblingIndex());
+        levelThumbnailImage = go.GetComponent<RawImage>();
+        levelThumbnailImage.color = Color.white;
+        levelThumbnailImage.enabled = false;
+    }
+
     void UpdateDetailPanel(int index)
     {
         ArtistConfig config = ActiveConfig;
@@ -145,6 +168,10 @@ public class MixtapeMapController : MonoBehaviour
             ? config.tracks[index]
             : null;
         TrackSaveData save = GetSaveData(index);
+
+        // Patchy always shows on main menu
+        if (patchyCharacter != null)
+            patchyCharacter.gameObject.SetActive(true);
 
         if (waveformPreview != null && track != null)
         {

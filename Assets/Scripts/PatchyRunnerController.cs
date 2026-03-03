@@ -12,6 +12,9 @@ public class PatchyRunnerController : MonoBehaviour
     SpriteRenderer sr;
     Vector3 baseScale;
 
+    float stumbleTimer;
+    const float stumbleDuration = 0.25f;
+
     // Coyote time: allow jump for a short window after walking off the ground
     const float coyoteTime = 0.18f;
     float coyoteTimer = 0f;
@@ -19,6 +22,14 @@ public class PatchyRunnerController : MonoBehaviour
     // Jump buffer: if player presses just before landing, fire the jump on next ground contact
     const float jumpBufferTime = 0.15f;
     float jumpBufferTimer = 0f;
+
+    // Landing squash
+    bool wasGrounded;
+    float landSquashTimer;
+    const float landSquashDuration = 0.12f;
+
+    // Smooth scale
+    Vector3 targetScale;
 
     void Awake()
     {
@@ -68,20 +79,45 @@ public class PatchyRunnerController : MonoBehaviour
             coyoteTimer = 0f; // consume so we can't double-jump
         }
 
-        // --- Squash / stretch ---
-        if (sr)
+        // --- Landing detection ---
+        if (grounded && !wasGrounded)
+            landSquashTimer = landSquashDuration;
+        wasGrounded = grounded;
+
+        if (landSquashTimer > 0f)
+            landSquashTimer -= Time.deltaTime;
+
+        // --- Squash / stretch (or stumble) ---
+        Vector3 scaleMultiplier = Vector3.one;
+        if (stumbleTimer > 0f)
+        {
+            stumbleTimer -= Time.deltaTime;
+            scaleMultiplier = new Vector3(1.2f, 0.6f, 1f);
+        }
+        else if (landSquashTimer > 0f)
+        {
+            float t = landSquashTimer / landSquashDuration;
+            scaleMultiplier = Vector3.Lerp(Vector3.one, new Vector3(1.2f, 0.8f, 1f), t);
+        }
+        else if (sr)
         {
             float vy = rb.linearVelocity.y;
             if (!grounded && vy > 1f)
-                transform.localScale = Vector3.Scale(baseScale, new Vector3(0.85f, 1.15f, 1f));
+                scaleMultiplier = new Vector3(0.85f, 1.15f, 1f);
             else if (!grounded && vy < -1f)
-                transform.localScale = Vector3.Scale(baseScale, new Vector3(1.1f, 0.9f, 1f));
-            else
-                transform.localScale = baseScale;
+                scaleMultiplier = new Vector3(1.1f, 0.9f, 1f);
         }
+
+        targetScale = Vector3.Scale(baseScale, scaleMultiplier);
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * 15f);
     }
 
-    bool IsGrounded()
+    public void Stumble()
+    {
+        stumbleTimer = stumbleDuration;
+    }
+
+    public bool IsGrounded()
     {
         if (!groundCheck) return false;
         return Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundMask) != null;
