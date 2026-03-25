@@ -21,8 +21,8 @@ TagManager:
   - Enemy
   - OneWay
   - Ground
-  - 
-  - 
+  - Interactable
+  - Surface
   - 
   - 
   - 

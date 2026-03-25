@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d99fe8d93bbf14300918b73e4fd2db0c, type: 3}
+  m_Name: Track_06_Lounge
+  m_EditorClassIdentifier: Assembly-CSharp::TrackData
+  trackTitle: ghosting
+  artistName: Bombest Music
+  audioClip: {fileID: 8300000, guid: 0b0994c856e704bc98a7bc4d57e04247, type: 3}
+  bpm: 78
+  beatOffset: 0
+  dropTimestamps: []
+  roomType: 5
+  sceneName: Room_06_Lounge
+  roomSeed: 606
+  primaryColor: {r: 0.6, g: 0.3, b: 0.5, a: 1}
+  secondaryColor: {r: 0.2, g: 0.1, b: 0.2, a: 1}
+  accentColor: {r: 0.8, g: 0.4, b: 0.7, a: 1}
+  albumArtTexture: {fileID: 0}

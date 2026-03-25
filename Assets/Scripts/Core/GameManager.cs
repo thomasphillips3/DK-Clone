@@ -22,6 +22,13 @@ public class GameManager : MonoBehaviour
             AlbumAudioManager.Instance.SetAlbumConfig(albumConfig);
     }
 
+    public void SetAlbumConfig(AlbumConfig config)
+    {
+        albumConfig = config;
+        if (AlbumAudioManager.Instance != null)
+            AlbumAudioManager.Instance.SetAlbumConfig(config);
+    }
+
     public void SetNavigationMode(NavigationMode mode)
     {
         if (AlbumPlaybackController.Instance != null)

@@ -7,13 +7,34 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Boot.unity
-    guid: 69a4b52c2e99a4f09835846941867ffa
+    guid: 876a052349c9b42eea3b43ea7b04380e
   - enabled: 1
-    path: Assets/Scenes/MixtapeMap.unity
-    guid: 8db407560acc144eeb54d07a437f37cb
+    path: Assets/Scenes/Menu.unity
+    guid: 0100b985ffb6d468c9be50000ac847b4
   - enabled: 1
-    path: Assets/Scenes/Level01.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Room_01_LiveRoom.unity
+    guid: 9312f597a8965418292e7b99aaa8ee43
+  - enabled: 1
+    path: Assets/Scenes/Room_02_ControlRoom.unity
+    guid: 6ace5056631e34687be788f2f9f96c76
+  - enabled: 1
+    path: Assets/Scenes/Room_03_VocalBooth.unity
+    guid: 157f79961d92a463d914cade6e1aa0aa
+  - enabled: 1
+    path: Assets/Scenes/Room_04_EquipmentCloset.unity
+    guid: 5ada130af218c490faedddf79d0bb591
+  - enabled: 1
+    path: Assets/Scenes/Room_05_TapeMachineRoom.unity
+    guid: af644cfa44c074777905aa96756c6202
+  - enabled: 1
+    path: Assets/Scenes/Room_06_Lounge.unity
+    guid: f70c6fd5c397b437f982bb9f42f6de52
+  - enabled: 1
+    path: Assets/Scenes/Room_07_EchoChamber.unity
+    guid: cd681c27650034110a0fa72d992b2ccc
+  - enabled: 1
+    path: Assets/Scenes/Room_08_Rooftop.unity
+    guid: f937a55da8d584fbead10440488a0c88
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   m_UseUCBPForAssetBundles: 0

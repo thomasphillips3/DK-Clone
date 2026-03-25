@@ -11,17 +11,22 @@ public class BootController : MonoBehaviour
     [SerializeField] private AlbumConfig albumConfig;
     [SerializeField] private float bootDelay = 0.5f;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     IEnumerator Start()
     {
-        // Ensure GameManager exists
+        // Create singletons
         if (GameManager.Instance == null)
         {
             var gmGO = new GameObject("GameManager");
             var gm = gmGO.AddComponent<GameManager>();
-            // AlbumConfig is set via serialized field on the prefab/scene object
+            if (albumConfig != null)
+                gm.SetAlbumConfig(albumConfig);
         }
 
-        // Ensure AlbumAudioManager exists
         if (AlbumAudioManager.Instance == null)
         {
             var audioGO = new GameObject("AlbumAudioManager");
@@ -30,14 +35,12 @@ public class BootController : MonoBehaviour
                 aam.SetAlbumConfig(albumConfig);
         }
 
-        // Ensure AlbumPlaybackController exists
         if (AlbumPlaybackController.Instance == null)
         {
             var pbcGO = new GameObject("AlbumPlaybackController");
             pbcGO.AddComponent<AlbumPlaybackController>();
         }
 
-        // Ensure SceneFlowManager exists
         if (SceneFlowManager.Instance == null)
         {
             var sfGO = new GameObject("SceneFlowManager");
@@ -47,5 +50,8 @@ public class BootController : MonoBehaviour
         yield return new WaitForSeconds(bootDelay);
 
         SceneManager.LoadScene("Menu");
+
+        // Self-destruct after loading menu
+        Destroy(gameObject);
     }
 }
