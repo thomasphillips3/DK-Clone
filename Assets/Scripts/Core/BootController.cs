@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 /// <summary>
 /// Boot scene entry point. Ensures all singletons are initialized,
@@ -9,49 +8,49 @@ using System.Collections;
 public class BootController : MonoBehaviour
 {
     [SerializeField] private AlbumConfig albumConfig;
-    [SerializeField] private float bootDelay = 0.5f;
 
-    void Awake()
+    void Start()
     {
         DontDestroyOnLoad(gameObject);
+        InitializeSingletons();
+        SceneManager.LoadScene("Menu");
     }
 
-    IEnumerator Start()
+    void InitializeSingletons()
     {
-        // Create singletons
         if (GameManager.Instance == null)
         {
-            var gmGO = new GameObject("GameManager");
-            var gm = gmGO.AddComponent<GameManager>();
+            var go = new GameObject("GameManager");
+            var gm = go.AddComponent<GameManager>();
             if (albumConfig != null)
                 gm.SetAlbumConfig(albumConfig);
         }
 
         if (AlbumAudioManager.Instance == null)
         {
-            var audioGO = new GameObject("AlbumAudioManager");
-            var aam = audioGO.AddComponent<AlbumAudioManager>();
+            var go = new GameObject("AlbumAudioManager");
+            var aam = go.AddComponent<AlbumAudioManager>();
             if (albumConfig != null)
                 aam.SetAlbumConfig(albumConfig);
         }
 
         if (AlbumPlaybackController.Instance == null)
         {
-            var pbcGO = new GameObject("AlbumPlaybackController");
-            pbcGO.AddComponent<AlbumPlaybackController>();
+            var go = new GameObject("AlbumPlaybackController");
+            go.AddComponent<AlbumPlaybackController>();
         }
 
         if (SceneFlowManager.Instance == null)
         {
-            var sfGO = new GameObject("SceneFlowManager");
-            sfGO.AddComponent<SceneFlowManager>();
+            var go = new GameObject("SceneFlowManager");
+            go.AddComponent<SceneFlowManager>();
         }
+    }
 
-        yield return new WaitForSeconds(bootDelay);
-
-        SceneManager.LoadScene("Menu");
-
-        // Self-destruct after loading menu
-        Destroy(gameObject);
+    void Update()
+    {
+        // Self-destruct once we're past Boot scene
+        if (SceneManager.GetActiveScene().name != "Boot")
+            Destroy(gameObject);
     }
 }
