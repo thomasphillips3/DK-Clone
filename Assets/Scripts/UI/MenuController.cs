@@ -157,13 +157,9 @@ public class MenuController : MonoBehaviour
 
     void SelectAndPlay(int trackIndex)
     {
-        Debug.Log($"[MenuController] SelectAndPlay({trackIndex}) mode={selectedMode} GM={GameManager.Instance != null} SFM={SceneFlowManager.Instance != null}");
+        Debug.Log($"[MenuController] SelectAndPlay({trackIndex}) mode={selectedMode}");
         selectedTrack = trackIndex;
         GameManager.Instance?.SetNavigationMode(selectedMode);
-
-        if (selectedMode == NavigationMode.Sequential)
-            SceneFlowManager.Instance?.LoadRoom(0);
-        else
-            SceneFlowManager.Instance?.LoadRoom(trackIndex);
+        SceneFlowManager.Instance?.LoadRoom(trackIndex);
     }
 }
