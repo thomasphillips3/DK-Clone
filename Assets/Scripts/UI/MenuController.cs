@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using TMPro;
 
 /// <summary>
@@ -34,12 +36,39 @@ public class MenuController : MonoBehaviour
         Cursor.visible = true;
         Time.timeScale = 1f;
 
+        EnsureEventSystem();
+
         if (albumConfig == null && GameManager.Instance != null)
             albumConfig = GameManager.Instance.AlbumConfig;
 
         SetupUI();
         SetupModeButtons();
         UpdateModeButtonVisuals();
+
+        Debug.Log($"[MenuController] Started. albumConfig={albumConfig != null}, GameManager={GameManager.Instance != null}, SceneFlow={SceneFlowManager.Instance != null}");
+    }
+
+    void EnsureEventSystem()
+    {
+        if (EventSystem.current != null)
+        {
+            // Make sure InputSystemUIInputModule has a valid actions asset
+            var isim = EventSystem.current.GetComponent<InputSystemUIInputModule>();
+            if (isim != null && isim.actionsAsset == null)
+            {
+                Debug.LogWarning("[MenuController] InputSystemUIInputModule has no actions asset — destroying and recreating");
+                Destroy(isim);
+                var newIsim = EventSystem.current.gameObject.AddComponent<InputSystemUIInputModule>();
+                Debug.Log("[MenuController] Created fresh InputSystemUIInputModule");
+            }
+            return;
+        }
+
+        // No EventSystem exists — create one
+        var esGO = new GameObject("EventSystem");
+        esGO.AddComponent<EventSystem>();
+        esGO.AddComponent<InputSystemUIInputModule>();
+        Debug.Log("[MenuController] Created EventSystem with InputSystemUIInputModule");
     }
 
     void SetupUI()
@@ -128,6 +157,7 @@ public class MenuController : MonoBehaviour
 
     void SelectAndPlay(int trackIndex)
     {
+        Debug.Log($"[MenuController] SelectAndPlay({trackIndex}) mode={selectedMode} GM={GameManager.Instance != null} SFM={SceneFlowManager.Instance != null}");
         selectedTrack = trackIndex;
         GameManager.Instance?.SetNavigationMode(selectedMode);
 
