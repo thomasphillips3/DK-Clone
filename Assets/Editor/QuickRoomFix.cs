@@ -102,22 +102,26 @@ public static class QuickRoomFix
             RenderSettings.fogDensity = 0.03f;
             RenderSettings.fogColor = new Color(0.06f, 0.05f, 0.04f);
 
-            // Boost existing lights
-            foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+            // Boost existing lights via SerializedObject for proper save
+            bool hasDirLight = false;
+            foreach (var rootGO in scene.GetRootGameObjects())
             {
-                if (light.type == LightType.Point)
+                foreach (var light in rootGO.GetComponentsInChildren<Light>(true))
                 {
-                    light.intensity = Mathf.Max(light.intensity, 4f);
-                    light.range = Mathf.Max(light.range, 20f);
+                    Debug.Log($"[QuickFix] Found light '{light.gameObject.name}' type={light.type} intensity={light.intensity}");
+                    if (light.type == LightType.Point || light.type == LightType.Spot)
+                    {
+                        var lso = new SerializedObject(light);
+                        lso.FindProperty("m_Intensity").floatValue = 5f;
+                        lso.FindProperty("m_Range").floatValue = 25f;
+                        lso.ApplyModifiedPropertiesWithoutUndo();
+                        Debug.Log($"[QuickFix] Boosted {light.gameObject.name} to intensity=5 range=25");
+                    }
+                    if (light.type == LightType.Directional)
+                        hasDirLight = true;
                 }
             }
 
-            // Add a dim directional light for baseline visibility
-            bool hasDirLight = false;
-            foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
-            {
-                if (light.type == LightType.Directional) { hasDirLight = true; break; }
-            }
             if (!hasDirLight)
             {
                 var dirGO = new GameObject("AmbientDirectional");
@@ -131,9 +135,9 @@ public static class QuickRoomFix
 
             // Ensure dust particles exist
             bool hasDust = false;
-            foreach (var go in scene.GetRootGameObjects())
+            foreach (var go2 in scene.GetRootGameObjects())
             {
-                if (go.name == "DustParticles") { hasDust = true; break; }
+                if (go2.name == "DustParticles") { hasDust = true; break; }
             }
             if (!hasDust)
             {
@@ -161,9 +165,9 @@ public static class QuickRoomFix
 
             // Ensure InGameCanvas exists
             bool hasCanvas = false;
-            foreach (var go in scene.GetRootGameObjects())
+            foreach (var go3 in scene.GetRootGameObjects())
             {
-                if (go.name == "InGameCanvas") { hasCanvas = true; break; }
+                if (go3.name == "InGameCanvas") { hasCanvas = true; break; }
             }
             if (!hasCanvas)
             {
