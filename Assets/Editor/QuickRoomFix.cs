@@ -93,14 +93,41 @@ public static class QuickRoomFix
                 cam.fieldOfView = 65f;
             }
 
-            // Render settings
+            // Render settings — warm dim studio, not pitch black
             RenderSettings.skybox = null;
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = new Color(0.06f, 0.05f, 0.035f);
+            RenderSettings.ambientLight = new Color(0.18f, 0.14f, 0.10f);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogDensity = 0.05f;
-            RenderSettings.fogColor = new Color(0.03f, 0.025f, 0.02f);
+            RenderSettings.fogDensity = 0.03f;
+            RenderSettings.fogColor = new Color(0.06f, 0.05f, 0.04f);
+
+            // Boost existing lights
+            foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+            {
+                if (light.type == LightType.Point)
+                {
+                    light.intensity = Mathf.Max(light.intensity, 4f);
+                    light.range = Mathf.Max(light.range, 20f);
+                }
+            }
+
+            // Add a dim directional light for baseline visibility
+            bool hasDirLight = false;
+            foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+            {
+                if (light.type == LightType.Directional) { hasDirLight = true; break; }
+            }
+            if (!hasDirLight)
+            {
+                var dirGO = new GameObject("AmbientDirectional");
+                var dl = dirGO.AddComponent<Light>();
+                dl.type = LightType.Directional;
+                dl.color = new Color(0.9f, 0.8f, 0.65f);
+                dl.intensity = 0.4f;
+                dl.shadows = LightShadows.Soft;
+                dirGO.transform.rotation = Quaternion.Euler(45, -30, 0);
+            }
 
             // Ensure dust particles exist
             bool hasDust = false;
