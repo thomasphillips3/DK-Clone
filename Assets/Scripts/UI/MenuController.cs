@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Track selection menu. Shows 8 tracks, navigation mode selector, and play button.
+/// Track selection menu. Shows 8 tracks, navigation mode selector with active highlight.
+/// Tapping a track starts playback immediately.
 /// </summary>
 public class MenuController : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class MenuController : MonoBehaviour
     private int selectedTrack = 0;
     private NavigationMode selectedMode = NavigationMode.Sequential;
 
+    private static readonly Color ActiveModeColor = new Color(0.5f, 0.35f, 0.15f, 1f);
+    private static readonly Color InactiveModeColor = new Color(0.15f, 0.12f, 0.08f, 0.9f);
+    private static readonly Color TrackNormal = new Color(0.12f, 0.1f, 0.06f, 0.85f);
+    private static readonly Color TrackPressed = new Color(0.45f, 0.3f, 0.12f, 1f);
+    private static readonly Color TrackHighlight = new Color(0.2f, 0.16f, 0.08f, 1f);
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -32,6 +39,7 @@ public class MenuController : MonoBehaviour
 
         SetupUI();
         SetupModeButtons();
+        UpdateModeButtonVisuals();
     }
 
     void SetupUI()
@@ -58,7 +66,27 @@ public class MenuController : MonoBehaviour
                 int trackIndex = i;
                 var button = btn.GetComponent<Button>();
                 if (button != null)
+                {
+                    // Configure press feedback colors
+                    var colors = button.colors;
+                    colors.normalColor = TrackNormal;
+                    colors.highlightedColor = TrackHighlight;
+                    colors.pressedColor = TrackPressed;
+                    colors.selectedColor = TrackHighlight;
+                    colors.fadeDuration = 0.1f;
+                    button.colors = colors;
+
                     button.onClick.AddListener(() => SelectAndPlay(trackIndex));
+                }
+
+                // Ensure minimum touch target height (48dp)
+                var rt = btn.GetComponent<RectTransform>();
+                if (rt != null && rt.sizeDelta.y < 52f)
+                {
+                    var size = rt.sizeDelta;
+                    size.y = 52f;
+                    rt.sizeDelta = size;
+                }
             }
         }
     }
@@ -77,6 +105,25 @@ public class MenuController : MonoBehaviour
     {
         selectedMode = mode;
         GameManager.Instance?.SetNavigationMode(mode);
+        UpdateModeButtonVisuals();
+    }
+
+    void UpdateModeButtonVisuals()
+    {
+        SetModeButtonColor(menuModeButton, selectedMode == NavigationMode.Menu);
+        SetModeButtonColor(connectedModeButton, selectedMode == NavigationMode.Connected);
+        SetModeButtonColor(sequentialModeButton, selectedMode == NavigationMode.Sequential);
+    }
+
+    void SetModeButtonColor(Button btn, bool active)
+    {
+        if (btn == null) return;
+        var colors = btn.colors;
+        colors.normalColor = active ? ActiveModeColor : InactiveModeColor;
+        colors.highlightedColor = active ? ActiveModeColor : new Color(0.25f, 0.2f, 0.12f, 1f);
+        colors.pressedColor = new Color(0.6f, 0.4f, 0.15f, 1f);
+        colors.fadeDuration = 0.15f;
+        btn.colors = colors;
     }
 
     void SelectAndPlay(int trackIndex)
@@ -85,7 +132,7 @@ public class MenuController : MonoBehaviour
         GameManager.Instance?.SetNavigationMode(selectedMode);
 
         if (selectedMode == NavigationMode.Sequential)
-            SceneFlowManager.Instance?.LoadRoom(0); // Start from track 1
+            SceneFlowManager.Instance?.LoadRoom(0);
         else
             SceneFlowManager.Instance?.LoadRoom(trackIndex);
     }

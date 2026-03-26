@@ -205,6 +205,13 @@
             "devices": [
                 { "devicePath": "<Gamepad>", "isOptional": false }
             ]
+        },
+        {
+            "name": "Touch",
+            "bindingGroup": "Touch",
+            "devices": [
+                { "devicePath": "<Touchscreen>", "isOptional": false }
+            ]
         }
     ]
 }
